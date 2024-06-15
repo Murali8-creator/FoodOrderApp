@@ -36,6 +36,7 @@ public class ItemController {
             existingCartItem.setQuantity(existingCartItem.getQuantity() + 1);
             cartRepository.save(existingCartItem);
         } else {
+            cartItems.setQuantity(1);
             cartRepository.save(cartItems);
         }
     }
@@ -43,7 +44,15 @@ public class ItemController {
     @DeleteMapping("/delete/{id}")
     public void removeFromCart(@PathVariable String id) {
         LOGGER.info("Removing item from cart with id: {}", id);
-        cartRepository.deleteById(id);
+        CartItem cartItem = cartRepository.findById(id).orElse(null);
+        if (cartItem != null) {
+            if (cartItem.getQuantity() > 1) {
+                cartItem.setQuantity(cartItem.getQuantity() - 1);
+                cartRepository.save(cartItem);
+            } else {
+                cartRepository.deleteById(id);
+            }
+        }
     }
 
     @GetMapping("/cart")

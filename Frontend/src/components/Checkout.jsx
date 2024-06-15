@@ -7,7 +7,6 @@ export const Checkout = ({ total, closeModal ,onSubmitted}) => {
     
     const url = "http://localhost:8080/orders";
 
-
     async function handleSubmitClick(event){
         event.preventDefault();
 
